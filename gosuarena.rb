@@ -54,7 +54,7 @@ class RRobotsGameWindow < Gosu::Window
   
   def initialize(battlefield, xres, yres)
     super(xres,yres, true, 16)
-    @leaderboard = LeaderBoard.new(self, battlefield, xres, yres)
+    @leaderboard = LeaderBoard.new(self, battlefield, xres, yres, :left_top)
     self.caption = 'RRobots - GOSU POWERED'
     @font = Gosu::Font.new(self, BIG_FONT, xres / 20)
     @small_font = Gosu::Font.new(self, SMALL_FONT, xres/100)
@@ -105,11 +105,11 @@ class RRobotsGameWindow < Gosu::Window
   def play_sounds
     @battlefield.robots.each do |ai|
       if !ai.robot.events['got_hit'].empty?
-        @sound_boom.play(0.2)
+        @sound_boom.play(0.4)
       end
 
       if ai.actions[:fire] > 0 && ai.gun_heat <= 0
-        @sound_gun.play([ai.actions[:fire], 1].min)
+        @sound_gun.play([ai.actions[:fire]*3, 1].min)
       end
     end
   end
