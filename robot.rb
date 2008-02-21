@@ -273,7 +273,7 @@ class RobotRunner
       bullet = Bullet.new(@battlefield, @x, @y, @gun_heading, 30, @actions[:fire]*3.0, self)
       3.times{bullet.tick}
       @battlefield << bullet
-      @gun_heat = @actions[:fire]
+      @gun_heat = @actions[:fire] * 3
     end
     @gun_heat -= 0.1
     @gun_heat = 0 if @gun_heat < 0

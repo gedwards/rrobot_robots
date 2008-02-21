@@ -99,7 +99,7 @@ class Explosion
 
   def tick
     @t += 1
-    @dead ||= t > 15
+    @dead ||= t >= 15
   end
 end
 
