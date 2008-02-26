@@ -38,7 +38,6 @@ class LeaderBoard
         y = @y_offset + (i * (@font_size * 1.5).to_i) - (@font_size * 1.5).to_i
         @font.draw("#{r.first.name}", @x_offset, y, ZOrder::UI, 1.0, 1.0, r.last.font_color)
         @font.draw("#{r.first.energy.to_i}", @x_offset + (@font_size * 6), y, ZOrder::UI, 1.0, 1.0, r.last.font_color)
-
       end
     end
   end
@@ -78,10 +77,6 @@ class RRobotsGameWindow < Gosu::Window
     @sound_gun = Gosu::Sample.new(self, 'sounds/shotborn.wav')
   end
 
-  def draw
-    @background_image.draw(0, 0, ZOrder::Background)
-  end
-  
   def on_game_over(&block)
     @on_game_over_handlers << block
   end
@@ -108,6 +103,7 @@ class RRobotsGameWindow < Gosu::Window
       self.close
     end
   end
+
   def robot_keys
     pressed = []
     BUTTONS.each do |b|

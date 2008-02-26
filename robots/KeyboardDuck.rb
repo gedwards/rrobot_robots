@@ -7,11 +7,11 @@ class KeyboardDuck
 
   def tick(events)
     unless (dist = events['robot_scanned']).empty?
-      say 'ENEMY SPOTTED ' + (dist.first.first / 2).to_s + ' PIXELS AWAY!'
+      say 'ENEMY SPOTTED ' + (dist.first.first / 2).to_i.to_s + ' PIXELS AWAY!'
     end
     
-    unless (dmg = events['got_hit']).empty?
-      say 'GOT HIT FOR ' + dmg.to_s + ' ENERGY POINTS'
+    unless events['got_hit'].empty?
+      say 'OUCH!'
     end
 
     if events['button_pressed'].include?(Gosu::Button::KbNumpad1)
