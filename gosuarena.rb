@@ -7,18 +7,21 @@ end
 require 'gosu'
 BIG_FONT = 'PortagoITC TT'
 SMALL_FONT = 'Monaco'
-
-GosuRobot = Struct.new(:body, :gun, :radar, :speech, :info, :status)
+COLORS = ['white', 'blue', 'yellow', 'red', 'lime'] 
+FONT_COLORS = [0xffffffff, 0xff0008ff, 0xfffff706, 0xffff0613, 0xff00ff04]
+    
+BUTTONS = [Gosu::Button::KbNumpad0, Gosu::Button::KbNumpad1, Gosu::Button::KbNumpad2, Gosu::Button::KbNumpad3, Gosu::Button::KbNumpad4, Gosu::Button::KbNumpad5, Gosu::Button::KbNumpad6, Gosu::Button::KbNumpad7, Gosu::Button::KbNumpad8, Gosu::Button::KbNumpad9, Gosu::Button::KbNumpadMultiply] 
+GosuRobot = Struct.new(:body, :gun, :radar, :speech, :info, :status, :color, :font_color)
 
 module ZOrder
   Background, Robot, Explosions, UI = *0..3
 end
 
 class LeaderBoard
-  def initialize(window, battlefield, xres, yres, position = :right_top)
+  def initialize(window, robots, xres, yres, position = :right_top)
     @font_size = (xres / 45).to_i
     @position = position
-    @battlefield = battlefield
+    @robots = robots
     @font = Gosu::Font.new(window, BIG_FONT, @font_size)
     case position
     when :right_top
@@ -30,10 +33,13 @@ class LeaderBoard
   end
 
   def draw
-    @battlefield.robots.sort_by{|a|-a.energy}.each_with_index do |r, i|
-      y = @y_offset + (i * (@font_size * 1.5).to_i) - (@font_size * 1.5).to_i
-      @font.draw("#{r.name}", @x_offset, y, 0xffffff00)
-      @font.draw("#{r.energy.to_i}", @x_offset + (@font_size * 6), y, 0xffffff00)
+    if @robots
+      @robots.sort_by{|k,v| -k.energy}.each_with_index do |r, i|
+        y = @y_offset + (i * (@font_size * 1.5).to_i) - (@font_size * 1.5).to_i
+        @font.draw("#{r.first.name}", @x_offset, y, ZOrder::UI, 1.0, 1.0, r.last.font_color)
+        @font.draw("#{r.first.energy.to_i}", @x_offset + (@font_size * 6), y, ZOrder::UI, 1.0, 1.0, r.last.font_color)
+
+      end
     end
   end
 end
@@ -54,7 +60,6 @@ class RRobotsGameWindow < Gosu::Window
   
   def initialize(battlefield, xres, yres)
     super(xres,yres, true, 16)
-    @leaderboard = LeaderBoard.new(self, battlefield, xres, yres, :left_top)
     self.caption = 'RRobots - GOSU POWERED'
     @font = Gosu::Font.new(self, BIG_FONT, xres / 20)
     @small_font = Gosu::Font.new(self, SMALL_FONT, xres/100)
@@ -64,6 +69,7 @@ class RRobotsGameWindow < Gosu::Window
     @on_game_over_handlers = []
     init_window
     init_simulation
+    @leaderboard = LeaderBoard.new(self, @robots, xres, yres, :left_top)
 
     # for ultimate win
     @theme = Gosu::Song.new(self, 'music/song.mod')
@@ -93,12 +99,22 @@ class RRobotsGameWindow < Gosu::Window
 
 
   def draw
+    robot_keys
     simulate
     draw_battlefield
     play_sounds
     @leaderboard.draw
     if button_down? Gosu::Button::KbEscape
       self.close
+    end
+  end
+  def robot_keys
+    pressed = []
+    BUTTONS.each do |b|
+      pressed << b if button_down?(b)
+    end
+    @battlefield.robots.each do |ai|
+      ai.pressed_button(pressed)
     end
   end
   
@@ -145,13 +161,17 @@ class RRobotsGameWindow < Gosu::Window
   def draw_robots
     @battlefield.robots.each_with_index do |ai, i|
       next if ai.dead
+      col = COLORS[i % COLORS.size]
+      font_col = FONT_COLORS[i % FONT_COLORS.size]
       @robots[ai] ||= GosuRobot.new(
-        Gosu::Image.new(self, 'images/red_body000.bmp'),
-        Gosu::Image.new(self, 'images/red_turret000.bmp'),
-        Gosu::Image.new(self, 'images/red_radar000.bmp'),
+        Gosu::Image.new(self, "images/#{col}_body000.bmp"),
+        Gosu::Image.new(self, "images/#{col}_turret000.bmp"),
+        Gosu::Image.new(self, "images/#{col}_radar000.bmp"),
         @small_font,
         @small_font,
-        @small_font
+        @small_font,
+        col,
+        font_col
       )
       
       @robots[ai].body.draw_rot(ai.x / 2, ai.y / 2, ZOrder::Robot, (-(ai.heading-90)) % 360)
@@ -159,12 +179,12 @@ class RRobotsGameWindow < Gosu::Window
       @robots[ai].radar.draw_rot(ai.x / 2, ai.y / 2, ZOrder::Robot, (-(ai.radar_heading-90)) % 360)
       if @talkative
         @robots[ai].info.draw("#{ai.name}\n#{'|' * (ai.energy / 5)}", 
-                              ai.x / 2 - 50, ai.y / 2 + 30, ZOrder::UI, 1.0, 1.0, 0xffffff00)
+                              ai.x / 2 - 50, ai.y / 2 + 30, ZOrder::UI, 1.0, 1.0, font_col)
         @robots[ai].status.draw("#{ai.name.ljust(20)} #{'%.1f' % ai.energy}", 
-                                ai.x / 2 - 50, ai.y / 2 + 30, ZOrder::UI, 1.0, 1.0, 0xffffff00)
+                                ai.x / 2 - 50, ai.y / 2 + 30, ZOrder::UI, 1.0, 1.0, font_col)
       else
-        @robots[ai].speech.draw_rel(ai.speech.to_s, ai.x / 2, ai.y / 2 - 40, ZOrder::UI, 0.5, 0.5, 1, 1, 0xffffff00)
-        @robots[ai].info.draw_rel("#{ai.name}", ai.x / 2, ai.y / 2 + 30, ZOrder::UI, 0.5, 0.5, 1, 1, 0xffffff00)
+        @robots[ai].speech.draw_rel(ai.speech.to_s, ai.x / 2, ai.y / 2 - 40, ZOrder::UI, 0.5, 0.5, 1, 1, font_col)
+        @robots[ai].info.draw_rel("#{ai.name}", ai.x / 2, ai.y / 2 + 30, ZOrder::UI, 0.5, 0.5, 1, 1, font_col)
       end
     end
   end

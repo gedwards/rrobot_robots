@@ -342,6 +342,10 @@ class RobotRunner
       end
     end
   end
+  
+  def pressed_button(id)
+    @events['button_pressed'] += id
+  end
 
   def to_s
     @robot.class.name
