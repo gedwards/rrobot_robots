@@ -20,7 +20,7 @@ class KeyboardDuck
     if events['button_pressed'].include?(Gosu::Button::KbNumpad3)
         turn_radar -4
     end
-    if events['button_pressed'].include?(Gosu::Button::KbNumpadMultiply)
+    if events['button_pressed'].include?(Gosu::Button::KbNumpad0)
         fire 3
     end
     if events['button_pressed'].include?(Gosu::Button::KbNumpad8)
