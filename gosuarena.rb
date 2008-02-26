@@ -117,11 +117,13 @@ class RRobotsGameWindow < Gosu::Window
   def play_sounds
     @battlefield.robots.each do |ai|
       if !ai.robot.events['got_hit'].empty?
-        @sound_boom.play(0.4)
+        pan = -1.0 + (2.0 * ai.x / @battlefield.width)
+        @sound_boom.play_pan(pan, 0.4)
       end
 
       if ai.actions[:fire] > 0 && ai.gun_heat <= 0
-        @sound_gun.play([ai.actions[:fire]*3, 1].min)
+        pan = -1.0 + (2.0 * ai.x / @battlefield.width)
+        @sound_gun.play_pan(pan, [ai.actions[:fire]*3, 1].min)
       end
     end
   end
