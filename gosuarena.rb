@@ -19,7 +19,8 @@ end
 
 class LeaderBoard
   def initialize(window, robots, xres, yres, position = :right_top)
-    @font_size = (xres / 45).to_i
+    @font_size = (xres / 30).to_i
+    # @font_size = (xres / 45).to_i
     @position = position
     @robots = robots
     @font = Gosu::Font.new(window, BIG_FONT, @font_size)
@@ -58,10 +59,13 @@ class RRobotsGameWindow < Gosu::Window
   attr_accessor :boom, :robots, :bullets, :explosions
   
   def initialize(battlefield, xres, yres)
-    super(xres,yres, true, 16)
+    fullscreen = false
+    super(xres,yres, fullscreen, 16)
     self.caption = 'RRobots - GOSU POWERED'
-    @font = Gosu::Font.new(self, BIG_FONT, xres / 20)
-    @small_font = Gosu::Font.new(self, SMALL_FONT, xres/100)
+    # @font = Gosu::Font.new(self, BIG_FONT, xres / 20)
+    @font = Gosu::Font.new(self, BIG_FONT, xres / 10)
+    @small_font = Gosu::Font.new(self, SMALL_FONT, xres/30)
+    # @small_font = Gosu::Font.new(self, SMALL_FONT, xres/100)
     @background_image = Gosu::Image.new(self, "images/space.png", true)
     @battlefield = battlefield
     @xres, @yres = xres, yres

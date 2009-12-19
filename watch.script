@@ -1,0 +1,1 @@
+watch('robots/.*\.rb') { |md| system "ruby gosurrobots.rb robots/ente robots/DadBot robots/JuggerDuck robots/DoomBot  robots/RubberDuck"}

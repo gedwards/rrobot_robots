@@ -3,7 +3,8 @@ require 'ostruct'
 
 module RubberRobot
   MEMO_SIZE = 250
-  GUN_POWER = 0.1
+  # GUN_POWER = 0.1
+  GUN_POWER = 3
   ACC_WHILE_MOVING = false
   class Memo # (forgetting old values) {{{
     def initialize(n)
