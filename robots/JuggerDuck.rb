@@ -4,9 +4,9 @@ class JuggerDuck
    include Robot
    
   def move_me
-    turn 2 if near_wall
-    accelerate 1
-    return 
+    # turn 2 if near_wall
+    # accelerate 1
+    # return 
     turn 1 if heading != 90
     if time % 200 > 100
       accelerate 1

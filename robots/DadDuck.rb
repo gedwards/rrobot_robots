@@ -19,8 +19,10 @@ class DadDuck
 
   def turn_my_radar
     # turn_radar 1
-    if enemy_seen_recently(100): say "WAITING"
-    elsif enemy_seen: say "bye bye!"
+    if enemy_seen_recently(100)
+      say "WAITING"
+    elsif enemy_seen
+      say "bye bye!"
     else say "looking"
     end
   end

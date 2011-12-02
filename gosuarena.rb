@@ -75,10 +75,11 @@ class RRobotsGameWindow < Gosu::Window
     @leaderboard = LeaderBoard.new(self, @robots, xres, yres, :left_top)
 
     # for ultimate win
-    @theme = Gosu::Song.new(self, 'music/song.mod')
-    @theme.play
+    # @theme = Gosu::Song.new(self, 'music/song.mod')
+    # @theme.play
     @sound_boom = Gosu::Sample.new(self, 'sounds/sunexp.wav')
     @sound_gun = Gosu::Sample.new(self, 'sounds/shotborn.wav')
+    $p = self
   end
 
   def on_game_over(&block)
@@ -188,6 +189,13 @@ class RRobotsGameWindow < Gosu::Window
         @robots[ai].speech.draw_rel(ai.speech.to_s, ai.x / 2, ai.y / 2 - 40, ZOrder::UI, 0.5, 0.5, 1, 1, font_col)
         @robots[ai].info.draw_rel("#{ai.name}", ai.x / 2, ai.y / 2 + 30, ZOrder::UI, 0.5, 0.5, 1, 1, font_col)
       end
+    end
+    unless $bbox.nil? || $bbox.empty?
+      $bbox.each{|elem|
+        colr = elem[:color] || 0xFFFFffff
+        r = elem[:rect]
+        $p.draw_quad(r[0], r[1], colr, r[2], r[1], colr,r[0], r[3], colr, r[2], r[3], colr)#, z = 0...mode=:default)
+      }
     end
   end
 

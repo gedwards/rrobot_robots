@@ -9,22 +9,25 @@ class DoomBot
     @radar_direction ||=5
     turn_radar @radar_direction
     @radar_direction *= -1
-    say "#{events.inspect}" if see_target
+    # say "#{events.inspect}" if see_target
 
     #turn_gun 30 if time < 3
     accelerate 1
     turn 2 if near_wall
     # (stop; turn 0) if enemy_seen_recently(50)
     
-    puts "#{events['robot_scanned'][0].inspect} #{radar_heading.inspect}" unless events['robot_scanned'].empty?
+    # puts "#{events['robot_scanned'][0].inspect} #{radar_heading.inspect}" unless events['robot_scanned'].empty?
     if enemy_seen_recently(50)
       if gun_heat == 0
-        puts "-----------------BANG!" 
+        # puts "-----------------BANG!" 
         case @last_enemy_dist
-        when 0...100: fire 3; puts "2: #{gun_heat}"
-        when 100...500: fire 2; puts "3: #{gun_heat}"
-        when 500...1000: fire 0.5; puts "4: #{gun_heat}"
-        else fire 0.2; puts "5: #{gun_heat}"
+        when 0...100
+          fire 3; #puts "2: #{gun_heat}"
+        when 100...500
+          fire 2; #puts "3: #{gun_heat}"
+        when 500...1000
+          fire 0.5; #puts "4: #{gun_heat}"
+        else fire 0.2; #puts "5: #{gun_heat}"
         end
       end
     else

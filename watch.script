@@ -1,1 +1,7 @@
-watch('robots/.*\.rb') { |md| system "ruby gosurrobots.rb robots/ente robots/DadBot robots/JuggerDuck robots/DoomBot  robots/RubberDuck"}
+# watch('robots/.*\.rb') { |md| system "ruby gosurrobots.rb robots/DadBot robots/JuggerDuck robots/SittingDuck"}
+# watch('robots/.*\.rb') { |md| system "ruby gosurrobots.rb robots/DadBot robots/NervousDuck robots/SittingDuck"}
+# watch('robots/.*\.rb') { |md| system "ruby gosurrobots.rb robots/ente robots/DadBot robots/JuggerDuck robots/DoomBot  robots/RubberDuck"}
+# watch('robots/.*\.rb') { |md| system "ruby gosurrobots.rb robots/SittingDuck robots/DoomBot"}
+watch('robots/.*\.rb') { |md| system "ruby gosurrobots.rb robots/SittingDuck robots/ente"}
+# watch('robots/.*\.rb') { |md| system "ruby gosurrobots.rb robots/ente robots/DoomBot"}
+# watch('robots/.*\.rb') { |md| system "ruby gosurrobots.rb robots/ente robots/DadBot robots/JuggerDuck robots/DoomBot"}

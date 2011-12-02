@@ -12,9 +12,16 @@ module RobotFunctions
   def self.toBAMS(x); (((x)/360.0) * 256) end
   def self.toDEGS(b); (((b)/256.0) * 360) end
 
+
+  def self.modNearestInt(a,b) a-b*(a.to_f/b).round end
+
+
   #double a1, a2     # "real" angles
   #int b1, b2, b3    # BAMS angles
   def self.smallest_angle_between(a1=0,a2=90)
+    # puts "Angle (#{a1})(#{a2})=#{modNearestInt(a2-a1,360.0)}"
+    return modNearestInt(a2-a1,360.0)
+    
     b1 = toBAMS(a1)
     b2 = toBAMS(a2)
 
@@ -64,6 +71,16 @@ module RobotFunctions
       # puts "At [#{a},#{b}] going to [#{x},#{y}] Heading(#{goal_heading}),Dist(#{goal_distance}) = #{angle_delta} Turn"
       [angle_delta,goal_distance]
   end
+  
+  #------------------
+  def near_wall(x,y,buffer)
+    # buffer = size * 6
+    return true if x < buffer
+    return true if x > battlefield_width - buffer
+    return true if y < buffer
+    return true if y > battlefield_height - buffer
+  end
+  #------------------
 end
 # RobotFunctions::smallest_angle_between(0,1)
 # RobotFunctions::smallest_angle_between(0,-1)

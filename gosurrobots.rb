@@ -1,4 +1,5 @@
-require 'robot'
+require_relative 'robot'
+$LOAD_PATH << '.'
 
 class Numeric
    TO_RAD = Math::PI / 180.0
@@ -279,13 +280,14 @@ team_divider = (ARGV.size / teams.size.to_f).ceil
 ARGV.map! do |robot|
   begin
     begin
-      require robot.downcase
+      require_relative robot.downcase
     rescue LoadError
     end
     begin
-      require robot
+      require_relative robot
     rescue LoadError
-  end
+      raise
+    end
   in_game_name = File.basename(robot).sub(/\..*$/, '')
   in_game_name[0] = in_game_name[0,1].upcase
   team = c / team_divider
@@ -293,9 +295,14 @@ ARGV.map! do |robot|
   robotrunner = RobotRunner.new(Object.const_get(in_game_name).new, battlefield, team)
   battlefield << robotrunner
   rescue Exception => error
-    puts 'Error loading ' + robot + '!'
+    puts 'Error loading ' + robot + '!!'
     warn error
-    usage
+    # usage
+    puts '-'*50
+    puts error.message
+    puts error.backtrace
+    puts '-'*50
+    raise
   end
   in_game_name
 end
