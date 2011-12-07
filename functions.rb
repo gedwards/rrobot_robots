@@ -19,6 +19,10 @@ module RobotFunctions
 
   #----------------------------------------------------
 
+  def grow(by_x, by_y, a,b,x,y)
+    [a - by_x, b - by_y, x + by_x, y + by_y]
+  end
+
   def scale(box)
     [scale_x(box.a), scale_y(box.b), scale_x(box.x), scale_y(box.y)]
   end
@@ -65,6 +69,40 @@ module RobotFunctions
   def self.angle_between(a,b,x,y)
     heading = Math::atan2(b-y,x-a) / DEG % 360 # NOTE: using b-y instead of y-b because y increases DOWNWARD
   end         
+
+  def avg_angle(a,b)
+    diff = ( ( a - b + 180 + 360 ) % 360 ) - 180
+    angle = (360 + b + ( diff / 2 ) ) % 360
+  end
+
+  def angle_diff(a,b)
+    diff = ( ( a - b + 180 + 360 ) % 360 ) - 180
+  end
+
+  class EmptyImageStub
+    def initialize(w,h)
+      @w, @h = w, h;
+    end
+
+    def to_blob
+      "\0" * @w * @h * 4
+    end
+
+    def rows
+      @h
+    end
+
+    def columns
+      @w
+    end
+  end
+
+  def empty(w,h)
+    stub = EmptyImageStub.new(w,h)
+    return Gosu::Image.new($p,stub,true)
+    # return Gosu::Image.new(MainWindow.instance,stub,true)
+  end
+
 
   def self.distance_between(a,b,x,y)
     dx, dy = x-a, y-b
