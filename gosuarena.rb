@@ -5,6 +5,8 @@ rescue LoadError
   # In case you don't.
 end
 require 'gosu'
+require 'texplay'
+
 BIG_FONT = 'PortagoITC TT'
 SMALL_FONT = 'Monaco'
 COLORS = ['white', 'blue', 'yellow', 'red', 'lime'] 
@@ -194,7 +196,8 @@ class RRobotsGameWindow < Gosu::Window
       $bbox.each{|elem|
         colr = elem[:color] || 0xFFFFffff
         r = elem[:rect]
-        $p.draw_quad(r[0], r[1], colr, r[2], r[1], colr,r[0], r[3], colr, r[2], r[3], colr)#, z = 0...mode=:default)
+        z = elem[:z] || 10
+        $p.draw_quad(r[0], r[1], colr, r[2], r[1], colr,r[0], r[3], colr, r[2], r[3], colr, z)#, z = 0...mode=:default)
       }
     end
   end
