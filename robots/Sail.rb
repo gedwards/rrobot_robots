@@ -5,6 +5,12 @@ class Sail
   include Robot
   include RobotFunctions
 
+  def f(power)
+    #gun heat == power * 30 (3 power == 90 ticks to cool down)
+    fire(power)
+    @fire_time = time
+  end
+
   def tick events
     if time == 0
       $bbox = []
@@ -15,8 +21,8 @@ class Sail
       @r_cnt = 100
       @last_saw_target = 0
       @accel = 1
+      @fire_time = -1
     end
-
     #--- look ---------
     distance = events['robot_scanned'][0][0].to_i rescue 100
 
@@ -37,12 +43,13 @@ class Sail
     if speed.abs == 8
       @accel *= -1
     end
-    accelerate(@accel)
+    # accelerate(@accel)
 
     #--- think --------
     @map.each{|r| r[:rect] = grow(scale_x(8), scale_y(8), *r[:rect])}
 
     if see_target?
+      f(0.1)
       @last_saw_target = time
       @r_step = ((@r_step.to_f / 2).ceil).to_i
       if @r_step <= 2
@@ -69,6 +76,7 @@ class Sail
     end
 
     #--- react --------
+    turn_gun(@r_step * @r_direction)
     turn_radar(@r_step * @r_direction)
 
     $bbox = [ radar_box ].concat(@map) << avg_radar_box

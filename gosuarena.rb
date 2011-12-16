@@ -5,7 +5,6 @@ rescue LoadError
   # In case you don't.
 end
 require 'gosu'
-require 'texplay'
 
 BIG_FONT = 'PortagoITC TT'
 SMALL_FONT = 'Monaco'
@@ -197,7 +196,6 @@ class RRobotsGameWindow < Gosu::Window
         colr = elem[:color] || 0xFFFFffff
         r = elem[:rect]
         z = elem[:z] || 10
-
         $p.draw_quad(r[0], r[1], colr, r[2], r[1], colr,r[0], r[3], colr, r[2], r[3], colr, z)#, z = 0...mode=:default)
       }
     end

@@ -3,12 +3,13 @@
 # watch('robots/.*\.rb') { |md| system "ruby gosurrobots.rb robots/ente robots/DadBot robots/JuggerDuck robots/DoomBot  robots/RubberDuck"}
 # watch('robots/.*\.rb') { |md| system "ruby gosurrobots.rb robots/SittingDuck robots/DoomBot"}
 def go(robots)
+  puts '','-'*50
   list = robots.map{|r| "robots/#{r.strip}" }
   system "bundle exec ruby gosurrobots.rb #{list.join(' ')}"
 end
 
-watch('robots/.*\.rb') { |md| go %w[DadBot Sail] }
-# watch('robots/.*\.rb') { |md| go %w[DadBot SittingDuck Sail] }
+# watch('robots/.*\.rb') { |md| go %w[DadBot Sail] }
+watch('robots/.*\.rb') { |md| go %w[DadBot SittingDuck Sail] }
 
 # watch('robots/.*\.rb') { |md| system "ruby gosurrobots.rb robots/ente robots/DoomBot"}
 # watch('robots/.*\.rb') { |md| system "ruby gosurrobots.rb robots/ente robots/DadBot robots/JuggerDuck robots/DoomBot"}
